@@ -19,7 +19,7 @@ savingToJSON = False
 def welcome(message):
     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
 
-    item1 = types.KeyboardButton("Load JSON")
+    item1 = types.KeyboardButton("Upload JSON")
     item2 = types.KeyboardButton("Roll")
 
     markup.add(item1, item2)
@@ -70,7 +70,7 @@ def go_send_messages(message):
         messageJSON += message.text
 
     elif message.chat.type == 'private':
-        if message.text == 'Load JSON':
+        if message.text == 'Upload JSON':
             savingToJSON = True
             bot.send_message(message.chat.id, 'Enter JSON:')
 
