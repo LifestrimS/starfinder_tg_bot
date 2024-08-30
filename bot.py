@@ -56,7 +56,7 @@ def saveJSON(message):
         skills.append(skill)
     
     character = Character(skills=skills)
-    bot.send_message(message.chat.id, 'Saved!'.format(message.from_user))
+    bot.send_message(message.chat.id, 'JSON saved. You can roll!')
 
 def parseIntJson(int):
     return str(int)
@@ -66,8 +66,12 @@ def go_send_messages(message):
     print(f'go_send_messages: {message}')
     global savingToJSON
     global messageJSON
-    if (savingToJSON):
-        messageJSON += message.text
+    if (message.chat.type == 'private') and (message.text == 'End JSON'):
+        endWriteJSON(message)
+
+    elif (savingToJSON):
+            bot.send_message(message.chat.id, 'Saved! Go next or print /endJSON'.format(message.from_user))
+            messageJSON += message.text
 
     elif message.chat.type == 'private':
         if message.text == 'Upload JSON':
@@ -137,26 +141,26 @@ def go_send_messages(message):
             ite19 = types.InlineKeyboardButton(skills[19].skill_name + ' +' + skills[19].skill_mod, callback_data="19")
             ite19_0 = types.InlineKeyboardButton('Shadow roll', callback_data="19_0")
             one_markup.add(ite0, ite0_0, 
-                           ite1, ite1_0,
-                           ite2, ite2_0, 
-                           ite3, ite3_0, 
-                           ite4, ite4_0, 
-                           ite5, ite5_0, 
-                           ite6, ite6_0, 
-                           ite7, ite7_0, 
-                           ite8, ite8_0, 
-                           ite9, ite9_0, 
-                           ite10, ite10_0,
-                           ite11, ite11_0,
-                           ite12, ite12_0, 
-                           ite13, ite13_0, 
-                           ite14, ite14_0, 
-                           ite15, ite15_0, 
-                           ite16, ite16_0, 
-                           ite17, ite17_0, 
-                           ite18, ite18_0, 
-                           ite19, ite19_0,
-                           )
+                        ite1, ite1_0,
+                        ite2, ite2_0, 
+                        ite3, ite3_0, 
+                        ite4, ite4_0, 
+                        ite5, ite5_0, 
+                        ite6, ite6_0, 
+                        ite7, ite7_0, 
+                        ite8, ite8_0, 
+                        ite9, ite9_0, 
+                        ite10, ite10_0,
+                        ite11, ite11_0,
+                        ite12, ite12_0, 
+                        ite13, ite13_0, 
+                        ite14, ite14_0, 
+                        ite15, ite15_0, 
+                        ite16, ite16_0, 
+                        ite17, ite17_0, 
+                        ite18, ite18_0, 
+                        ite19, ite19_0,
+                        )
 
             bot.send_message(message.chat.id, "Which skill?".format(
                 message.from_user),parse_mode="html", reply_markup=one_markup)
@@ -181,6 +185,11 @@ def go_send_messages(message):
                                                             '17', '17_0',
                                                             '18', '18_0',
                                                             '19', '19_0',]) 
+# def writingJSONButtons():
+#     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+#     item1 = types.KeyboardButton("End JSON")
+#     markup.add(item1)
+
 def callback_inline_one(call):
         global character
         bot.answer_callback_query(call.id)
