@@ -28,12 +28,19 @@ def welcome(message):
                      "Hello there, {0.first_name}!\n\n"
                      "<i>Have a nice time</i>".format(
                          message.from_user, bot.get_me()),
-                     parse_mode='html', reply_markup=markup)
+                     parse_mode='html',reply_markup=markup)
     
 
 @bot.message_handler(commands=['endJSON'])
 def endWriteJSON(message):
-    bot.send_message(message.chat.id, 'End of writing JSON')
+    markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+
+    item1 = types.KeyboardButton("Upload JSON")
+    item2 = types.KeyboardButton("Roll")
+
+    markup.add(item1, item2)
+
+    bot.send_message(message.chat.id, 'End of writing JSON', reply_markup=markup)
     global savingToJSON
     global messageJSON
     savingToJSON = False
@@ -70,13 +77,23 @@ def go_send_messages(message):
         endWriteJSON(message)
 
     elif (savingToJSON):
-            bot.send_message(message.chat.id, 'Saved! Go next or print /endJSON'.format(message.from_user))
+            markup = types.ReplyKeyboardRemove()
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1 = types.KeyboardButton("End JSON")
+            markup.add(item1)
+
+            bot.send_message(message.chat.id, 'Saved! Go next or print /endJSON'.format(message.from_user), reply_markup=markup)
             messageJSON += message.text
 
     elif message.chat.type == 'private':
         if message.text == 'Upload JSON':
+            markup = types.ReplyKeyboardRemove()
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            item1 = types.KeyboardButton("End JSON")
+            markup.add(item1)
+
             savingToJSON = True
-            bot.send_message(message.chat.id, 'Enter JSON:')
+            bot.send_message(message.chat.id, 'Enter JSON:', reply_markup=markup)
 
         elif message.text == "Roll":
             global skills
@@ -185,11 +202,6 @@ def go_send_messages(message):
                                                             '17', '17_0',
                                                             '18', '18_0',
                                                             '19', '19_0',]) 
-# def writingJSONButtons():
-#     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-#     item1 = types.KeyboardButton("End JSON")
-#     markup.add(item1)
-
 def callback_inline_one(call):
         global character
         bot.answer_callback_query(call.id)
@@ -198,7 +210,7 @@ def callback_inline_one(call):
             bot.send_message(call.message.chat.id, str(character.skills[int(call.data)].rollString()), parse_mode="html")
         else:
             endOfNumber = call.data.find('_')
-            bot.send_message(call.message.chat.id, str(character.skills[int(call.data[:endOfNumber])].shadowRollString()), parse_mode="html")         
+            bot.send_message(call.message.chat.id, str(character.skills[int(call.data[:endOfNumber])].shadowRollString()), parse_mode="html")   
 
 
 @bot.message_handler(commands=['stop'])  # Обработка команды для выхода
